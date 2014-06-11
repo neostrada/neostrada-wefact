@@ -168,10 +168,19 @@ class Neostrada implements IRegistrar
 	{
 		$RV = FALSE;
 		list ($DomainName, $Extension) = explode ('.', $domain, 2);
+		if (array_key_exists($this->ClassName, $whois->ownerRegistrarHandles)) {
+			$HolderID = $whois->ownerRegistrarHandles[$this->ClassName];
+		} elseif (strlen($whois->ownerSurName) > 0) {
+			$HolderID = $this->createContact($whois, HANDLE_OWNER);
+			$this->registrarHandles['owner'] = $HolderID;
+		} else {
+			$HolderID = 636787232;
+		}
 		$this->prepare('transferwefact', array(
 			'domain'	=> $DomainName,
 			'extension' => $Extension,
 			'authcode'	=> $authcode,
+			'holderid'	=> $HolderID,
 			'webip'		=> '',
 			'ns1'		=> $nameservers['ns1'],
 			'ns2'		=> $nameservers['ns2'],
