@@ -140,9 +140,8 @@ class Neostrada implements IRegistrar
 		} elseif (strlen($whois->ownerSurName) > 0) {
 			$HolderID = $this->createContact($whois, HANDLE_OWNER);
 			$this->registrarHandles['owner'] = $HolderID;
-		} else {
-			$HolderID = 636787232;
 		}
+		if ((int)$HolderID === 0) $HolderID = 636787232;
 		$this->prepare('registerwefact', array(
 			'domain'	=> $DomainName,
 			'extension' => $Extension,
@@ -173,9 +172,8 @@ class Neostrada implements IRegistrar
 		} elseif (strlen($whois->ownerSurName) > 0) {
 			$HolderID = $this->createContact($whois, HANDLE_OWNER);
 			$this->registrarHandles['owner'] = $HolderID;
-		} else {
-			$HolderID = 636787232;
 		}
+		if ((int)$HolderID === 0) $HolderID = 636787232;
 		$this->prepare('transferwefact', array(
 			'domain'	=> $DomainName,
 			'extension' => $Extension,
@@ -308,9 +306,8 @@ class Neostrada implements IRegistrar
 		} elseif (strlen($whois->ownerSurName) > 0) {
 			$HolderID = $this->createContact($whois, HANDLE_OWNER);
 			$this->registrarHandles['owner'] = $HolderID;
-		} else {
-			$HolderID = 636787232;
 		}
+		if ((int)$HolderID === 0) $HolderID = 636787232;
 		$this->prepare('modify', array(
 			'domain'	=> $DomainName,
 			'extension' => $Extension,
