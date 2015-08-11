@@ -372,7 +372,11 @@ class Neostrada implements IRegistrar
 				'email'			=> $whois->ownerEmailAddress
 			));
 			if ($this->execute() === TRUE && ($Result = $this->fetch()) !== FALSE) {
-				if ((int)$Result['code'] === 200) $RV = (int)$Result['holderid'];
+				if ((int)$Result['code'] === 200) {
+					$RV = (int)$Result['holderid'];
+				} else {
+					$this->Error[] = '[NEOSTRADA] Could not create contact: '.json_encode($Result);
+				}
 			}
 		}
 		return $RV;
