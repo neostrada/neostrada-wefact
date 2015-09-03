@@ -135,7 +135,7 @@ class Neostrada implements IRegistrar
 	{
 		$RV = FALSE;
 		list ($DomainName, $Extension) = explode ('.', $domain, 2);
-		if (array_key_exists($this->ClassName, $whois->ownerRegistrarHandles)) {
+		if (is_array($whois->ownerRegistrarHandles) && array_key_exists($this->ClassName, $whois->ownerRegistrarHandles)) {
 			$HolderID = $whois->ownerRegistrarHandles[$this->ClassName];
 		} elseif (strlen($whois->ownerSurName) > 0) {
 			$HolderID = $this->createContact($whois, HANDLE_OWNER);
@@ -167,7 +167,7 @@ class Neostrada implements IRegistrar
 	{
 		$RV = FALSE;
 		list ($DomainName, $Extension) = explode ('.', $domain, 2);
-		if (array_key_exists($this->ClassName, $whois->ownerRegistrarHandles)) {
+		if (is_array($whois->ownerRegistrarHandles) && array_key_exists($this->ClassName, $whois->ownerRegistrarHandles)) {
 			$HolderID = $whois->ownerRegistrarHandles[$this->ClassName];
 		} elseif (strlen($whois->ownerSurName) > 0) {
 			$HolderID = $this->createContact($whois, HANDLE_OWNER);
@@ -301,7 +301,7 @@ class Neostrada implements IRegistrar
 	{
 		$RV = FALSE;
 		list ($DomainName, $Extension) = explode ('.', $domain, 2);
-		if (array_key_exists($this->ClassName, $whois->ownerRegistrarHandles)) {
+		if (is_array($whois->ownerRegistrarHandles) && array_key_exists($this->ClassName, $whois->ownerRegistrarHandles)) {
 			$HolderID = $whois->ownerRegistrarHandles[$this->ClassName];
 		} elseif (strlen($whois->ownerSurName) > 0) {
 			$HolderID = $this->createContact($whois, HANDLE_OWNER);
@@ -410,7 +410,7 @@ class Neostrada implements IRegistrar
 				$RV->ownerAddress = $Street.' '.$HouseNumber.$HouseNumberPostfix;
 				$RV->ownerZipCode = $ZIPCode;
 				$RV->ownerCity = $City;
-				$RV->ownerCountry = (array_key_exists(strtoupper($Country), $array_country) ? strtoupper($Country) : (array_key_exists('EU-'.strtoupper($Country), $array_country) ? 'EU-'.strtoupper($Country) : ''));
+				$RV->ownerCountry = (is_array($array_country) && array_key_exists(strtoupper($Country), $array_country) ? strtoupper($Country) : (is_array($array_country) && array_key_exists('EU-'.strtoupper($Country), $array_country) ? 'EU-'.strtoupper($Country) : ''));
 				$RV->ownerEmailAddress = $Email;
 			} else {
 				$this->Error[] = '[NEOSTRADA] No contact found, try again later';
@@ -450,7 +450,7 @@ class Neostrada implements IRegistrar
 						'Address'		=> $Street.' '.$HouseNumber.$HouseNumberPostfix,
 						'ZipCode'		=> $ZIPCode,
 						'City'			=> $City,
-						'Country'		=> (array_key_exists(strtoupper($Country), $array_country) ? strtoupper($Country) : (array_key_exists('EU-'.strtoupper($Country), $array_country) ? 'EU-'.strtoupper($Country) : '')),
+						'Country'		=> (is_array($array_country) && array_key_exists(strtoupper($Country), $array_country) ? strtoupper($Country) : (is_array($array_country) && array_key_exists('EU-'.strtoupper($Country), $array_country) ? 'EU-'.strtoupper($Country) : '')),
 						'EmailAddress'	=> $Email
 					);
 				}
