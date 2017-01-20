@@ -1,23 +1,29 @@
-<?php //003cb
-// Copyright 2013 Avot Media BV
-if(!extension_loaded('ionCube Loader')){$__oc=strtolower(substr(php_uname(),0,3));$__ln='ioncube_loader_'.$__oc.'_'.substr(phpversion(),0,3).(($__oc=='win')?'.dll':'.so');@dl($__ln);if(function_exists('_il_exec')){return _il_exec();}$__ln='/ioncube/'.$__ln;$__oid=$__id=realpath(ini_get('extension_dir'));$__here=dirname(__FILE__);if(strlen($__id)>1&&$__id[1]==':'){$__id=str_replace('\\','/',substr($__id,2));$__here=str_replace('\\','/',substr($__here,2));}$__rd=str_repeat('/..',substr_count($__id,'/')).$__here.'/';$__i=strlen($__rd);while($__i--){if($__rd[$__i]=='/'){$__lp=substr($__rd,0,$__i).$__ln;if(file_exists($__oid.$__lp)){$__ln=$__lp;break;}}}@dl($__ln);}else{die('The file '.__FILE__." is corrupted.\n");}if(function_exists('_il_exec')){return _il_exec();}echo('Site error: the file <b>'.__FILE__.'</b> requires the ionCube PHP Loader '.basename($__ln).' to be installed by the site administrator.');exit(199);
+<?php
+$version['name']            = 'Neostrada';
+$version['api_version']     = '1.0';
+$version['date']            = '2016-01-20'; // Last modification date
+$version['wefact_version']  = '1.1'; // Version released for WeFact
+$version['autorenew']       = true; // AutoRenew is default?  true | false
+$version['handle_support']  = true; // Handles are supported? true | false
+$version['cancel_direct']   = false; // Possible to terminate domains immediately?  true | false
+$version['cancel_expire']   = false; // Possible to stop auto-renew for domains? true | false
+
+// Information for customer (will be showed at registrar-show-page)
+$version['dev_logo']		= ''; // URL to your logo
+$version['dev_author']		= 'Neostrada'; // Your companyname
+$version['dev_website']		= 'https://www.neostrada.nl'; // URL website
+$version['dev_email']		= 'support@neostrada.nl'; // Your e-mailaddress for support questions
+//$version['dev_phone']		= ''; // Your phone number for support questions
+
+// Does this registrar integration support functions related to domains?
+$version['domain_support']  = true;
+// Does this registrar integration support functions related to SSL certificates?
+$version['ssl_support']   	= false;
+
+// Does this registrar integration support functions related to DNS management?
+$version['dns_management_support']   	= false;
+// Does this registrar integration support DNS templates?
+$version['dns_templates_support']       = false;
+// Does this registrar integration support DNS records?
+$version['dns_records_support']         = false;
 ?>
-4+oV5CJK+q5HCi1sE61kOg/fl9K/HVW9cS+s4EKTUKjSgEhjjFsSunTmbi1JCeiK1CBHa8DooSVk
-D1wHZhZCLyDoGevjIhZtmbx8RScd5OYrmFOAM8XMXYR8NSafExiOtUkjxLYMqATH64LwdkJ50egw
-g4ZhwYBQ3oxqNCRaPVOJ+IRN8+8Zm0E87FSPnJGQdh3bgm6R6v1lh3xxubJh0hxBnw2ZbrjNlyIZ
-jafdhWMECFw1DgjIcSYMdy/XCCGS7ihohMeO/DSbOtsCQkoxaStslSps9p101hzY4hQ6NBFTDu4h
-xAZ9+HbXrdJxD0Yh3c4dThqxqRVJRpe1rIwcof1A2ZVuat4pRUrSIXM1teK3nYZEtzpUqz014xRW
-oN9lAzoJkSxqUpHYAncWJchq9Uh9FdCYMyzHLpfMYucTymf7/W/kReW9ohes2x6XgNyvpBLpPKJN
-W0hAoQawGFI1KUMdapFjIH+lvWy3giHsMDEFzWBbDZl8gs5ch2vvZ3C6weh6HLkK0tEaBgMv4RiG
-2F8e0f865aXLl7am6/ZOYwlBOhHgPZcKVss+MFgq7o4+iBA7UYJBQW8QzbEZxPiP6qzAI8YrJez/
-L0Hlq8D5aifmewV0AVvwhBcJ+hqsgY9H/xy9WPt+/yMI8xSBru5frBRDb4b54PA/wGSJk//8wciY
-j9rFzYCTk6Jbi653BgTnm6M7EySIL0loo+REmcICcCDjZOV1JrYwtJ5dDLzePbYMMFUUUpL1Wlsd
-mGuIzPUkOQhaBwRJWBcrRRrlN4yfveeer3ZoK0ZxY2Pid+vBY25/qkK1z7HoG/UfVF35YHoVS9WE
-IYSagZLWiEs9ycjn0Olv2cPCrJXv5CA8X5sTmYOs3YkrIJTwM7oFpPydc7stwNrz7gntWnaYnujJ
-GC1Z6fhcswscBtxTguG9bpbHqrDQAKc8OZ2gt7vxRUan7JHESmientRkIb7dljGhq7aTPqDILGCc
-qI1g7oRmwVhVY1z7HFYCuraLnI5cgXN+zA1hsp9ZRW9fBcqvnyVoZA/6sUKrcLbApulPhAZSqhiR
-SUUZVeRZjxCFybhyDVz6K4oA+rG+98DjLgoJlO/uxBj9HkdBArA3vgkBu7NtiVkYZ0gJcfl4igEs
-JSuwc2fxA4NoRCZdBfIHCBQAO9JR5ixnRGlOgUPMdLIB9kaMUzjkkgtCNobl60uBmf+KuHelU0z8
-aFiqA2UQgkIsTqsU3CCVaPF7me+sIvCCc+iLe9+vykmR1VnhOwLFmu5VJ1uzAUD/krKFxDn+AKyz
-hmY73+JVdtxiXX2iirljYhm0sx9k1dVtv2B3DKS2jEIz2PPbxclKd6CmsUhLvA3bw8K/sE3IQ0ZP
-p/co4KempDzOez7sIWog3hB5idsPBE2/UPl9iFTDIQSzE1WqUz8pGKBbKxkli5TP

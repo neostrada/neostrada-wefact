@@ -243,14 +243,30 @@ class Neostrada implements IRegistrar
 				$RV = array();
 				foreach ($Result['details'] AS $D) {
 					list ($Domain, $StartDate, $ExpirationDate, $Nameservers, $HolderID) = explode(';', urldecode($D));
+
+					// Other services, such as rankingCoach, shouldn't be in the result.
+					if (count(explode('.', $Domain, 2)) == 1) {
+						continue;
+					}
+
+					// Same goes for external domains, which have an expiration date of more than 3 years.
+					// 1098 days (approximately 3 years) is used because this is the maximum contract period.
+					$date1 = new DateTime($StartDate);
+					$date2 = new DateTime($ExpirationDate);
+					$interval = $date1->diff($date2);
+
+					if ($interval->days > 1098) {
+						continue;
+					}
+
 					$Whois = new whois();
 					$Whois->ownerHandle = $HolderID;
 					$Whois->adminHandle = $HolderID;
 					$Whois->techHandle = $HolderID;
 					$RV[] = array(
-						'Domain'			=> $Domain,
-						'Information'		=> array(
-							'nameservers'	=> explode(',', $Nameservers),
+						'Domain'		=> $Domain,
+						'Information'	=> array(
+							'nameservers'	=> array_filter(explode(',', $Nameservers)),
 							'whois'			=> $Whois,
 							'expires'		=> rewrite_date_db2site($ExpirationDate),
 							'regdate'		=> rewrite_date_db2site($StartDate)
@@ -479,6 +495,95 @@ class Neostrada implements IRegistrar
 			$RV = ((int)$Result['code'] === 200 ? TRUE : FALSE);
 		}
 		return $RV;
+	}
+	/**
+	 * Neostrada :: getSyncData
+	 *
+	 * @return	array
+	 */
+	public function getSyncData($list_domains)
+	{
+		$check_domains = $list_domains;
+
+		// Check if we'll be syncing one or more domains.
+		if (count($check_domains) == 1) {
+			$domain = key($check_domains);
+			$domain_labels = explode('.', $domain, 2);
+
+			if (count($domain_labels) == 2) {
+				// Get nameservers.
+				$this->prepare('getnameserver', array(
+					'domain' 	=> $domain_labels[0],
+					'extension' => $domain_labels[1]
+				));
+
+				if ($this->execute() === TRUE && ($Result = $this->fetch()) !== FALSE && $Result['code'] == 200) {
+					$nameservers_array = is_array($Result['nameservers']) ? array_filter($Result['nameservers']) : array();
+				}
+
+				// Get expiration date.
+				$this->prepare('getexpirationdate', array(
+					'domain' 	=> $domain_labels[0],
+					'extension' => $domain_labels[1]
+				));
+
+				if ($this->execute() === TRUE && ($Result = $this->fetch()) !== FALSE && $Result['code'] == 200) {
+					$expirationdate = !empty($Result['expirationdate']) ? $Result['expirationdate'] : '';
+				}
+
+				$list_domains[$domain]['Information']['nameservers'] = isset($nameservers_array) ? $nameservers_array : array();
+				$list_domains[$domain]['Information']['expiration_date'] = isset($expirationdate) ? $expirationdate : '';
+				$list_domains[$domain]['Information']['auto_renew'] = 'on';
+				$list_domains[$domain]['Status'] = 'success';
+
+				unset($check_domains[$domain]);
+			}
+		} else {
+			$this->prepare('domainslist');
+
+			if ($this->execute() === TRUE && ($Result = $this->fetch()) !== FALSE && $Result['code'] == 200) {
+				foreach ($Result['domains'] as $domain) {
+					list($domain, $created_at, $expires_at, $nameservers, $holder_id) = explode(';', urldecode($domain));
+
+					if (!isset($list_domains[$domain])) {
+						continue;
+					}
+
+					// Other services, such as rankingCoach, shouldn't be synced.
+					if (count(explode('.', $domain, 2)) == 1) {
+						continue;
+					}
+
+					// Same goes for external domains, which have an expiration date of more than 3 years.
+					// 1098 days (approximately 3 years) is used because this is the maximum contract period.
+					$date1 = new DateTime($created_at);
+					$date2 = new DateTime($expires_at);
+					$interval = $date1->diff($date2);
+
+					if ($interval->days > 1098) {
+						continue;
+					}
+
+					$nameservers_array = array_filter(explode(',', $nameservers));
+
+					$list_domains[$domain]['Information']['nameservers'] = $nameservers_array;
+					$list_domains[$domain]['Information']['expiration_date'] = $expires_at;
+					$list_domains[$domain]['Information']['auto_renew'] = 'on';
+					$list_domains[$domain]['Status'] = 'success';
+
+					unset($check_domains[$domain]);
+				}
+			}
+		}
+
+		if (count($check_domains) > 0) {
+			foreach($check_domains as $key => $domain) {
+				$list_domains[$key]['Status'] = 'error';
+				$list_domains[$key]['Error_msg'] = 'Domain not found';
+			}
+		}
+
+		return $list_domains;
 	}
 	/**
 	 * Neostrada :: doPending
