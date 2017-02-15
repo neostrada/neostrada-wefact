@@ -245,7 +245,7 @@ class Neostrada implements IRegistrar
 					list ($Domain, $StartDate, $ExpirationDate, $Nameservers, $HolderID) = explode(';', urldecode($D));
 
 					// Other services, such as rankingCoach, shouldn't be in the result.
-					if (count(explode('.', $Domain, 2)) == 1) {
+					if (strpos($Domain, ' ') !== false) {
 						continue;
 					}
 
@@ -542,7 +542,7 @@ class Neostrada implements IRegistrar
 			$this->prepare('domainslist');
 
 			if ($this->execute() === TRUE && ($Result = $this->fetch()) !== FALSE && $Result['code'] == 200) {
-				foreach ($Result['domains'] as $domain) {
+				foreach ($Result['details'] as $domain) {
 					list($domain, $created_at, $expires_at, $nameservers, $holder_id) = explode(';', urldecode($domain));
 
 					if (!isset($list_domains[$domain])) {
@@ -550,7 +550,7 @@ class Neostrada implements IRegistrar
 					}
 
 					// Other services, such as rankingCoach, shouldn't be synced.
-					if (count(explode('.', $domain, 2)) == 1) {
+					if (strpos($domain, ' ') !== false) {
 						continue;
 					}
 
