@@ -554,16 +554,6 @@ class Neostrada implements IRegistrar
 						continue;
 					}
 
-					// Same goes for external domains, which have an expiration date of more than 3 years.
-					// 1098 days (approximately 3 years) is used because this is the maximum contract period.
-					$date1 = new DateTime($created_at);
-					$date2 = new DateTime($expires_at);
-					$interval = $date1->diff($date2);
-
-					if ($interval->days > 1098) {
-						continue;
-					}
-
 					$nameservers_array = array_filter(explode(',', $nameservers));
 
 					$list_domains[$domain]['Information']['nameservers'] = $nameservers_array;
