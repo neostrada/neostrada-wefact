@@ -368,13 +368,12 @@ class Neostrada implements IRegistrar
 	 *
 	 * @return	bool
 	 */
-	public function createContact($whois, $type = HANDLE_OWNER)
+	public function createContact($whois, $type = HANDLE_OWNER, $handleId = 0)
 	{
-		$RV = FALSE;
 		if (preg_match('/^([^\d]*[^\d\s]) *(\d.*)$/', $whois->ownerAddress, $m) && is_array($m) && array_key_exists(1, $m) && array_key_exists(2, $m)) {
 			$Country = strtolower((strlen($whois->ownerCountry) > 2 ? str_replace('EU-', '', $whois->ownerCountry) : $whois->ownerCountry));
 			$this->prepare('holder', array(
-				'holderid'		=> 0,
+				'holderid'		=> $handleId,
 				'sex'			=> strtoupper($whois->ownerSex),
 				'firstname'		=> $whois->ownerInitials,
 				'center'		=> '',
@@ -385,6 +384,7 @@ class Neostrada implements IRegistrar
 				'zipcode'		=> $whois->ownerZipCode,
 				'city'			=> $whois->ownerCity,
 				'country'		=> (strlen($Country) < 2 ? 'NL' : $Country),
+				'phone'			=> $whois->ownerPhoneNumber,
 				'email'			=> $whois->ownerEmailAddress
 			));
 			if ($this->execute() === TRUE && ($Result = $this->fetch()) !== FALSE) {
@@ -404,7 +404,7 @@ class Neostrada implements IRegistrar
 	 */
 	public function updateContact($handle, $whois, $type = HANDLE_OWNER)
 	{
-		return $this->createContact($whois, $type);
+		return $this->createContact($whois, $type, $handle);
 	}
 	/**
 	 * Neostrada :: getContact
@@ -418,7 +418,7 @@ class Neostrada implements IRegistrar
 		$this->prepare('getholder', array('holderid' => $handle));
 		if ($this->execute() === TRUE && ($Result = $this->fetch()) !== FALSE) {
 			if ((int)$Result['code'] === 200) {
-				list ($HolderID, $Sex, $FirstName, $Center, $LastName, $Street, $HouseNumber, $HouseNumberPostfix, $ZIPCode, $City, $Country, $Email) = explode(';', urldecode($Result['holder']));
+				list ($HolderID, $Sex, $FirstName, $Center, $LastName, $Street, $HouseNumber, $HouseNumberPostfix, $ZIPCode, $City, $Country, $Phone, $Email) = explode(';', urldecode($Result['holder']));
 				$RV->ownerHandle = (int)$HolderID;
 				$RV->ownerSex = strtolower($Sex);
 				$RV->ownerInitials = $FirstName;
@@ -427,6 +427,7 @@ class Neostrada implements IRegistrar
 				$RV->ownerZipCode = $ZIPCode;
 				$RV->ownerCity = $City;
 				$RV->ownerCountry = (is_array($array_country) && array_key_exists(strtoupper($Country), $array_country) ? strtoupper($Country) : (is_array($array_country) && array_key_exists('EU-'.strtoupper($Country), $array_country) ? 'EU-'.strtoupper($Country) : ''));
+				$RV->ownerPhoneNumber = $Phone;
 				$RV->ownerEmailAddress = $Email;
 			} else {
 				$this->Error[] = '[NEOSTRADA] No contact found, try again later';
@@ -457,17 +458,18 @@ class Neostrada implements IRegistrar
 			if ((int)$Result['code'] === 200 && is_array($Result['holders']) && count($Result['holders']) > 0) {
 				$RV = array();
 				foreach ($Result['holders'] AS $Holder) {
-					list ($HolderID, $Sex, $FirstName, $Center, $LastName, $Street, $HouseNumber, $HouseNumberPostfix, $ZIPCode, $City, $Country, $Email) = explode(';', urldecode($Holder));
+					list ($HolderID, $Sex, $FirstName, $Center, $LastName, $Street, $HouseNumber, $HouseNumberPostfix, $ZIPCode, $City, $Country, $Phone, $Email) = explode(';', urldecode($Holder));
 					$RV[] = array(
 						'Handle'		=> (int)$HolderID,
-						'CompanyName'	=> '',
+						'CompanyName'		=> '',
 						'SurName'		=> (strlen($Center) > 0 ? $Center.' ' : '').$LastName,
 						'Initials'		=> $FirstName,
 						'Address'		=> $Street.' '.$HouseNumber.$HouseNumberPostfix,
 						'ZipCode'		=> $ZIPCode,
 						'City'			=> $City,
 						'Country'		=> (is_array($array_country) && array_key_exists(strtoupper($Country), $array_country) ? strtoupper($Country) : (is_array($array_country) && array_key_exists('EU-'.strtoupper($Country), $array_country) ? 'EU-'.strtoupper($Country) : '')),
-						'EmailAddress'	=> $Email
+						'Phone'			=> $Phone,
+						'EmailAddress'		=> $Email
 					);
 				}
 			}
