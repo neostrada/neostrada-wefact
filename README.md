@@ -1,6 +1,3 @@
-![Neostrada](https://www.neostrada.nl/asset/nx/images/logo.png) 
-=================
-
 # Neostrada WeFact module
 
 Easily connect WeFact to the Neostrada API using the Neostrada WeFact module and your [API credentials](https://www.neostrada.nl/mijn-account/api.html) to automatically register and manage domains.
